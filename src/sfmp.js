@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 
 // resize like before
 function resize() {
-  const dpr = Math.max(1, windows.devicePixelRatio || 1);
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
   canvas.width = Math.floor(canvas.clientWidth * dpr);
   canvas.height = Math.floor(canvas.clientHeight * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
