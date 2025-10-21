@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "dev": "live-server --no-browser --port=5500 --entry-file=index.html",
     "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

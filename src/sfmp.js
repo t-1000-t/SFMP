@@ -88,6 +88,9 @@ function drawOnce() {
 
   // A dot at the mouse position:
   dot(mouse.x, mouse.y, 5, "#9dd");
+  // crosshair lines
+  line(mouse.x - 10, mouse.y, mouse.x + 10, mouse.y, "#88a");
+  line(mouse.x, mouse.y - 10, mouse.x, mouse.y + 10, "#88a");
   text(
     `(${Math.round(mouse.x)}, ${Math.round(mouse.y)})`,
     mouse.x + 8,
@@ -99,8 +102,17 @@ function drawOnce() {
   line(20, 200, 300, 350);
 
   dot(250, 250, 20);
+  text("+X ->", canvas.clientWidth - 800, 12, "#4c7");
+  ctx.save();
+  ctx.translate(12, canvas.clientHeight - 180);
+  ctx.rotate(-Math.PI / 128);
+  text("+Y ↓", 0, 0, "#c74");
+  ctx.restore();
 }
 
 // Initial paint
 resize();
 drawOnce();
+
+console.log("canvas CSS size:", canvas.clientWidth, canvas.clientHeight);
+console.log("canvas backing size", canvas.width, canvas.height);
