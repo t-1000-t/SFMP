@@ -14,15 +14,46 @@ new ResizeObserver(resize).observe(canvas);
 // State
 let x = 100;
 let y = 200;
-let vx = 2; // velocity x
-let vy = 1.5; // velocity y
+let vx = 4; // velocity x
+let vy = -2; // velocity y
 const r = 20; // radius
+vy += 0.1;
+
+const balls = Array.from({ length: 10 }, () => ({
+  x: Math.random() * canvas.clientWidth,
+  y: Math.random() * canvas.clientHeight,
+  vx: (Math.random() - 0.5) * 6,
+  vy: (Math.random() - 0.5) * 6,
+  r: 10 + Math.random() * 10,
+}));
 
 // Draw & Update loop
 function draw() {
   // clear canvas
   ctx.fillStyle = "rgba(0, 0, 0, 0.25)";
   ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+  balls.forEach((ball) => {
+    // Update position
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+
+    if (ball.x + ball.r > canvas.width || ball.x - ball.r < 0) {
+      ball.vx *= -1;
+    }
+    if (ball.y + ball.r > canvas.height || ball.y - ball.r < 0) {
+      ball.vy *= -1;
+    }
+
+    // Draw circle
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+    ctx.fillStyle = "skyblue";
+    ctx.fill();
+    ctx.strokeStyle = "blue";
+    ctx.stroke();
+    ctx.closePath();
+  });
 
   // move the circle
   x += vx;
