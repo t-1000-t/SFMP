@@ -38,6 +38,7 @@ const draw = () => {
   const x = mouse.x + Math.cos(angle) * orbitRadius;
   const y = mouse.y + Math.sin(angle) * orbitRadius;
 
+  // point C
   ctx.beginPath();
   ctx.arc(x, y, 10, 0, Math.PI * 2);
   ctx.fillStyle = "#6f9";
