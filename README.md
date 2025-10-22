@@ -1,2 +1,3 @@
-lesson2
-<img width="1172" height="914" alt="image" src="https://github.com/user-attachments/assets/b2e6e50f-df67-4ede-9832-0468fe9909d5" />
+
+Lesson 3 point C
+<img width="1205" height="726" alt="Lesson 3 (C)" src="https://github.com/user-attachments/assets/3c455d1b-6a72-4c52-a217-08f58dbfbbf6" />
