@@ -84,6 +84,69 @@ const frame = (now) => {
 
   const drag = 0.0; // optional air drag on velocity (kept 0; we use damping below)
 
+  // Exercise 4 C
+  const drone = { x: 80, y: 80, speed: 240, r: 8, color: "#5af" };
+  {
+    const dx = mouse.x - drone.x;
+    const dy = mouse.y - drone.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist > 1) {
+      const ux = dx / dist;
+      const uy = dy / dist;
+      drone.x += ux * drone.speed * dt;
+      drone.y += uy * drone.speed * dt;
+    }
+    ctx.beginPath();
+    ctx.arc(drone.x, drone.y, drone.r, 0, Math.PI * 2);
+    ctx.fillStyle = drone.color;
+    ctx.fill();
+  }
+
+  // Exercise 4 D
+  const bob = {
+    x: ball.x + 80,
+    y: ball.y,
+    vx: 0,
+    vy: 0,
+    r: 10,
+    color: "#ff9b6a",
+  };
+  const rest = 80;
+  const k = 20;
+  // in physics, after moving 'ball':
+  {
+    const dx = bob.x - ball.x;
+    const dy = bob.y - ball.y;
+    const d = Math.hypot(dx, dy) || 0.0001;
+    const stretch = d - rest;
+    const fx = (dx / d) * (stretch * k);
+    const fy = (dy / d) * (stretch * k);
+
+    // apply equal/opposite forces
+    bob.vx -= fx * dt;
+    bob.vy -= fy * dt;
+    ball.vx += fx * dt;
+    ball.vy += fy * dt;
+
+    // integrate bob
+    bob.vx *= damping;
+    bob.vy *= damping;
+    bob.x += bob.vx * dt;
+    bob.y += bob.vy * dt;
+
+    // draw bar + bob
+    ctx.strokeStyle = "#666";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(ball.x, ball.y);
+    ctx.lineTo(bob.x, bob.y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(bob.x, bob.y, bob.r, 0, Math.PI * 2);
+    ctx.fillStyle = bob.color;
+    ctx.fill();
+  }
+
   // spring toward mouse if mouse is down; otherwise just gravity
   if (mouse.down) {
     // Hooke-like spring to the mouse
@@ -121,19 +184,35 @@ const frame = (now) => {
   const H = canvas.clientHeight;
   if (ball.x < ball.r) {
     ball.x = ball.r;
-    ball.vx *= -0.8;
+    // Exercise 2 B
+    ball.vx *= 0.9; // ground friction
+
+    // Exercise 1
+    // ball.vx *= -0.8;
   }
   if (ball.x > W - ball.r) {
     ball.x = W - ball.r;
-    ball.vx *= -0.8;
+    // Exercise 2 B
+    ball.vx *= 0.9; // ground friction
+
+    // Exercise 1
+    // ball.vx *= -0.8;
   }
   if (ball.y < ball.r) {
     ball.y = ball.r;
-    ball.vy *= -0.8;
+    // Exercise 2 B
+    ball.vx *= 0.9; // ground friction
+
+    // Exercise 1
+    // ball.vy *= -0.8;
   }
   if (ball.y > H - ball.r) {
     ball.y = H - ball.r;
-    ball.vy *= -0.8;
+    // Exercise 2 B
+    ball.vx *= 0.9; // ground friction
+
+    // Exercise 1
+    // ball.vy *= -0.8;
   }
 
   // DRAW
