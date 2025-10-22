@@ -23,8 +23,16 @@ const ball = {
 };
 
 const mouse = { x: ball.x, y: ball.y, down: false };
-let gravity = 300; // px/s^2 downwards
-let damping = 0.985; // velocity damping per frame
+
+// Exercise 1
+// let gravity = 300; // px/s^2 downwards
+// let damping = 0.985; // velocity damping per frame
+
+// Exercise 2 A
+let damping = 0.99;
+// let gravity = 0;
+let gravity = 150;
+
 let maxSpeed = 1200; // px/s cap
 
 // input
@@ -67,8 +75,13 @@ const frame = (now) => {
   ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
   // PHYSICS
+  // Exercise 1
   // 1) forces -> acceleration
-  const springK = 12; // spring stiffness
+  // const springK = 12; // spring stiffness
+
+  // Exercise2 A
+  const springK = 30;
+
   const drag = 0.0; // optional air drag on velocity (kept 0; we use damping below)
 
   // spring toward mouse if mouse is down; otherwise just gravity
