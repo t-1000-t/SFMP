@@ -1,3 +1,2 @@
-
-Lesson 3 point C
-<img width="1205" height="726" alt="Lesson 3 (C)" src="https://github.com/user-attachments/assets/3c455d1b-6a72-4c52-a217-08f58dbfbbf6" />
+Lesson 4 1st exercise
+<img width="1101" height="916" alt="image" src="https://github.com/user-attachments/assets/b62794df-1c56-4f3a-8fa7-7b618edb253c" />
