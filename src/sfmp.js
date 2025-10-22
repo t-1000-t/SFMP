@@ -216,7 +216,6 @@ const frame = (now) => {
   }
 
   // DRAW
-  //cursor
   ctx.beginPath();
   ctx.arc(mouse.x, mouse.y, 3, 0, Math.PI * 2);
   ctx.fillStyle = "#8fb7ff";
