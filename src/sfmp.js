@@ -22,13 +22,16 @@ window.addEventListener("mousemove", (e) => {
 let x = window.innerWidth / 2;
 let y = window.innerHeight / 2;
 
+const trail = Array.from({ length: 10 }, () => ({ x: 0, y: 0 }));
+
 const draw = () => {
   // fade trail
   ctx.fillStyle = "rgba(0,0,0,0.15)";
   ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
   // move smoothly toward mouse
-  x += (mouse.x - x) * 0.08;
+  // x += (mouse.x - x) * 0.03; // slower
+  x += (mouse.x - x) * 0.2; // faster
   y += (mouse.y - y) * 0.08;
 
   // draw follower
@@ -38,6 +41,14 @@ const draw = () => {
   ctx.shadowBlur = 20;
   ctx.shadowColor = "#5af";
   ctx.fill();
+
+  // a smooth comet tail
+  trail.forEach((p, i) => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 8 - i * 0.5, 0, Math.PI * 2);
+    ctx.fillStyle = `hsl(${200 + i * 10}, 80%, 60%)`;
+    ctx.fill();
+  });
 
   requestAnimationFrame(draw);
 };
