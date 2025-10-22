@@ -1,2 +1,3 @@
-lesson2
-<img width="1172" height="914" alt="image" src="https://github.com/user-attachments/assets/b2e6e50f-df67-4ede-9832-0468fe9909d5" />
+Lesson 4 1st exercise
+<img width="1101" height="916" alt="image" src="https://github.com/user-attachments/assets/b62794df-1c56-4f3a-8fa7-7b618edb253c" />
+
