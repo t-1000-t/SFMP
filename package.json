@@ -2,20 +2,12 @@
   "name": "sfmp",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "test.js",
   "scripts": {
-    "dev": "live-server --no-browser --port=5500 --entry-file=index.html",
-    "start": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "live-server --no-browser --port=5500 --entry-file=index.html"
   },
   "keywords": [],
   "author": "Vlad",
   "license": "MIT",
-  "type": "module",
-  "dependencies": {
-    "express": "^5.1.0",
-    "nodemon": "^3.1.10",
-    "path": "^0.12.7",
-    "url": "^0.11.4"
-  }
+  "type": "module"
 }

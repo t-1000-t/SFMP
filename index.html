@@ -2,69 +2,43 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Lesson 1 — Motion & Coordinates</title>
+    <title>Basic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       html,
       body {
         margin: 0;
         height: 100%;
-        background: #0b0f1a;
-        color: #e6e6e6;
-        font: 14px/1.4 system-ui, sans-serif;
-      }
-      .wrap {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
-        height: 100%;
-      }
-      header {
-        padding: 12px 16px;
-        border-bottom: 1px solid #223;
-        background: #0e1322;
-        position: sticky;
-        top: 0;
-        z-index: 1;
-      }
-      #info {
-        opacity: 0.85;
+        background: #06090f;
       }
       canvas {
-        display: block;
         width: 100%;
         height: 100%;
+        display: block;
+        cursor: none;
       }
-      .overlay {
+      .hud {
         position: fixed;
-        right: 12px;
-        bottom: 12px;
-        background: #111a;
-        padding: 8px 10px;
-        border: 1px solid #334;
+        left: 12px;
+        top: 10px;
+        color: #cfe;
+        font: 13px/1.4 system-ui;
+        background: #0a0f18cc;
+        padding: 6px 8px;
         border-radius: 8px;
+        border: 1px solid #1f2a3a;
       }
-      code {
-        background: #1118;
+      .hud kbd {
         padding: 0 4px;
+        border: 1px solid #334;
         border-radius: 4px;
+        background: #1116;
       }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <header>
-        <div id="info">
-          <strong>Lesson 3:</strong> Make something follow the mouse pointer.
-          <small>Drag the mouse around. Wheel = gravity +/–</small>
-          <code>(0,0)</code> (top-left). Mouse shown below.
-        </div>
-      </header>
-
-      <canvas id="c"></canvas>
-    </div>
-
-    <div class="overlay" id="mouse">mouse: (–, –)</div>
-    <script src="src/sfmp.js"></script>
+    <canvas id="c"></canvas>
+    <div class="hud" id="hud"></div>
+    <script src="src/test.js"></script>
   </body>
 </html>
