@@ -139,7 +139,7 @@ function frame(now) {
   ctx.fill();
 
   hud.innerHTML = `
-    <strong>Lesson 5</strong> — Particles + Mouse Forces<br>
+    <strong>Lesson 6</strong> — Particles + Mouse Forces<br>
     Mode: <kbd>A</kbd> attract • <kbd>R</kbd> repel • <kbd>N</kbd> none
     &nbsp;|&nbsp; radius: ${Math.round(forceRadius)} (wheel)
     &nbsp;|&nbsp; count: ${particles.length}
