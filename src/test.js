@@ -85,6 +85,24 @@ function frame(now) {
     p.vx += rand(-10, 10) * dt;
     p.vy += rand(-10, 10) * dt;
 
+    // ctx.lineWidth = 1;
+    // ctx.strokeStyle = "rgba(160,190,255,0.2)";
+    // for (let i = 0; i < particles.length; i += 1) {
+    //   const a = particles[i];
+    //   for (let j = i + 1; j < particles.length; j += 1) {
+    //     const b = particles[j];
+    //     const dx = a.x - b.x,
+    //       dy = a.y - b.y;
+    //     const d2 = dx * dx + dy * dy;
+    //     if (d2 < 90 * 90) {
+    //       ctx.beginPath();
+    //       ctx.moveTo(a.x, a.y);
+    //       ctx.lineTo(b.x, b.y);
+    //       ctx.stroke();
+    //     }
+    //   }
+    // }
+
     // mouse force
     if (forceMode !== "none") {
       const dx = p.x - mouse.x;
