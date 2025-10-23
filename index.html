@@ -9,7 +9,9 @@
       body {
         margin: 0;
         height: 100%;
-        background: #06090f;
+        background: #070a0f;
+        color: #cfe;
+        font: 13px/1.4 system-ui;
       }
       canvas {
         width: 100%;
@@ -21,24 +23,23 @@
         position: fixed;
         left: 12px;
         top: 10px;
-        color: #cfe;
-        font: 13px/1.4 system-ui;
-        background: #0a0f18cc;
-        padding: 6px 8px;
+        background: #0a0f16cc;
+        padding: 8px 10px;
+        border: 1px solid #223;
         border-radius: 8px;
-        border: 1px solid #1f2a3a;
       }
-      .hud kbd {
-        padding: 0 4px;
-        border: 1px solid #334;
+      kbd {
+        padding: 1px 6px;
+        border: 1px solid #345;
         border-radius: 4px;
-        background: #1116;
+        background: #111;
+        color: #9fd;
       }
     </style>
   </head>
   <body>
     <canvas id="c"></canvas>
     <div class="hud" id="hud"></div>
-    <script src="src/test.js"></script>
   </body>
+  <script src="src/test.js"></script>
 </html>
