@@ -1,3 +1,3 @@
-Lesson 5
+Lesson 6
 
-<img width="822" height="892" alt="image" src="https://github.com/user-attachments/assets/e8401bd4-5864-4694-9a64-8a7c7ce15b42" />
+<img width="925" height="908" alt="image" src="https://github.com/user-attachments/assets/ec334716-2438-4ca4-ae91-5df2608b777e" />
