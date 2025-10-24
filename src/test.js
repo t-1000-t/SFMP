@@ -25,13 +25,24 @@ let windAngle = 0;
 let gravity = { x: 0, y: 120 };
 let wind = { x: 60, y: 0 };
 let mouseForce = 1;
-let mode = "attract"; // attract | repel | none
+// let mode = "attract"; // attract | repel | none
+let targetMode = "attract";
+let mix = 1;
 
 window.addEventListener("keydown", (e) => {
   const k = e.key.toLowerCase();
-  if (k === "w") mode = "attract";
-  if (k === "e") mode = "repel";
-  if (k === "q") mode = "none";
+  // if (k === "w") mode = "attract";
+  // if (k === "e") mode = "repel";
+  // if (k === "q") mode = "none";
+  if (k === "w") targetMode = "attract";
+  if (k === "e") targetMode = "repel";
+  if (k === "q") targetMode = "none";
+});
+window.addEventListener("wheel", (e) => {
+  gravity.y = Math.max(
+    -300,
+    Math.min(300, gravity.y + (e.deltaY > 0 ? 20 : -20))
+  );
 });
 
 // ---- particles ----
@@ -60,24 +71,38 @@ function frame(now) {
   wind.x = Math.cos(windAngle) * 80;
   wind.y = Math.sin(windAngle) * 30;
 
-  const W = canvas.clientWidth,
-    H = canvas.clientHeight;
+  const W = canvas.clientWidth;
+  const H = canvas.clientHeight;
   for (let p of particles) {
     // forces reset
-    let ax = gravity.x,
-      ay = gravity.y;
+    let ax = gravity.x;
+    let ay = gravity.y;
     ax += wind.x;
     ay += wind.y;
 
-    if (mode !== "none") {
+    // if (mode !== "none") {
+    //   const dx = mouse.x - p.x,
+    //     dy = mouse.y - p.y;
+    //   const d2 = dx * dx + dy * dy;
+    //   if (d2 > 25 && d2 < 40000) {
+    //     const inv = 1 / Math.sqrt(d2);
+    //     const k = ((mode === "repel" ? 1 : -1) * mouseForce * 15000) / d2;
+    //     ax += dx * inv * k;
+    //     ay += dy * inv * k;
+    //   }
+    // }
+
+    if (targetMode !== "none") {
       const dx = mouse.x - p.x,
         dy = mouse.y - p.y;
       const d2 = dx * dx + dy * dy;
       if (d2 > 25 && d2 < 40000) {
         const inv = 1 / Math.sqrt(d2);
-        const k = ((mode === "repel" ? 1 : -1) * mouseForce * 15000) / d2;
-        ax += dx * inv * k;
-        ay += dy * inv * k;
+        const k = ((1 - mix - mix) * mouseForce * 15000) / d2;
+        // ax += dx * inv * k;
+        // ay += dy * inv * k;
+        ax += (W / 2 - p.x) * 0.2;
+        ay += (H / 2 - p.y) * 0.2;
       }
     }
 
