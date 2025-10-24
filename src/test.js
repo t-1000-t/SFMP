@@ -1,6 +1,6 @@
 // Lesson 6
 
-const canvas = document.createElementById("c");
+const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 const hud = document.getElementById("hud");
 
