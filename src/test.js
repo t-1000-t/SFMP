@@ -8,7 +8,7 @@ const resize = () => {
   const dpr = Math.max(1, window.devicePixelRatio || 1);
   canvas.width = Math.floor(canvas.clientWidth * dpr);
   canvas.height = Math.floor(canvas.clientHeight * dpr);
-  ctx.serTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 };
 
 new ResizeObserver(resize).observe(canvas);
