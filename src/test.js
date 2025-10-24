@@ -1,4 +1,4 @@
-// Lesson 6
+// Lesson 8
 
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
@@ -8,11 +8,12 @@ const resize = () => {
   const dpr = Math.max(1, window.devicePixelRatio || 1);
   canvas.width = Math.floor(canvas.clientWidth * dpr);
   canvas.height = Math.floor(canvas.clientHeight * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.serTransform(dpr, 0, 0, dpr, 0, 0);
 };
 
 new ResizeObserver(resize).observe(canvas);
 
+// ---- state ----
 const mouse = { x: 0, y: 0 };
 window.addEventListener("mousemove", (e) => {
   const r = canvas.getBoundingClientRect();
@@ -20,42 +21,17 @@ window.addEventListener("mousemove", (e) => {
   mouse.y = e.clientY - r.top;
 });
 
-// ---- forces ----
-let windAngle = 0;
-let gravity = { x: 0, y: 120 };
-let wind = { x: 60, y: 0 };
-let mouseForce = 1;
-// let mode = "attract"; // attract | repel | none
-let targetMode = "attract";
-let mix = 1;
-
-window.addEventListener("keydown", (e) => {
-  const k = e.key.toLowerCase();
-  // if (k === "w") mode = "attract";
-  // if (k === "e") mode = "repel";
-  // if (k === "q") mode = "none";
-  if (k === "w") targetMode = "attract";
-  if (k === "e") targetMode = "repel";
-  if (k === "q") targetMode = "none";
-});
-window.addEventListener("wheel", (e) => {
-  gravity.y = Math.max(
-    -300,
-    Math.min(300, gravity.y + (e.deltaY > 0 ? 20 : -20))
-  );
-});
-
-// ---- particles ----
-const N = 300;
-const damping = 0.985;
+const N = 200;
 const particles = [];
+const radius = 100;
 for (let i = 0; i < N; i++) {
   particles.push({
     x: Math.random() * window.innerWidth,
     y: Math.random() * window.innerHeight,
-    vx: 0,
-    vy: 0,
-    r: 2 + Math.random() * 2,
+    vx: (Math.random() - 0.5) * 80,
+    vy: (Math.random() - 0.5) * 80,
+    r: 2,
+    color: `hsl(${200 + Math.random() * 100},80%,60%)`,
   });
 }
 
@@ -67,79 +43,64 @@ function frame(now) {
   ctx.fillStyle = "rgba(0,0,0,0.25)";
   ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
-  windAngle += 0.2 * dt;
-  wind.x = Math.cos(windAngle) * 80;
-  wind.y = Math.sin(windAngle) * 30;
+  const W = canvas.clientWidth,
+    H = canvas.clientHeight;
 
-  const W = canvas.clientWidth;
-  const H = canvas.clientHeight;
+  // update positions
   for (let p of particles) {
-    // forces reset
-    let ax = gravity.x;
-    let ay = gravity.y;
-    ax += wind.x;
-    ay += wind.y;
-
-    // if (mode !== "none") {
-    //   const dx = mouse.x - p.x,
-    //     dy = mouse.y - p.y;
-    //   const d2 = dx * dx + dy * dy;
-    //   if (d2 > 25 && d2 < 40000) {
-    //     const inv = 1 / Math.sqrt(d2);
-    //     const k = ((mode === "repel" ? 1 : -1) * mouseForce * 15000) / d2;
-    //     ax += dx * inv * k;
-    //     ay += dy * inv * k;
-    //   }
-    // }
-
-    if (targetMode !== "none") {
-      const dx = mouse.x - p.x,
-        dy = mouse.y - p.y;
-      const d2 = dx * dx + dy * dy;
-      if (d2 > 25 && d2 < 40000) {
-        const inv = 1 / Math.sqrt(d2);
-        const k = ((1 - mix - mix) * mouseForce * 15000) / d2;
-        // ax += dx * inv * k;
-        // ay += dy * inv * k;
-        ax += (W / 2 - p.x) * 0.2;
-        ay += (H / 2 - p.y) * 0.2;
-      }
+    const dx = mouse.x - p.x;
+    const dy = mouse.y - p.y;
+    const d2 = dx * dx + dy * dy;
+    if (d2 < 20000) {
+      // gentle repel from mouse
+      const inv = 1 / Math.sqrt(d2 || 1);
+      p.vx -= dx * inv * 200 * dt;
+      p.vy -= dy * inv * 200 * dt;
     }
-
-    // integrate
-    p.vx += ax * dt;
-    p.vy += ay * dt;
-    p.vx *= damping;
-    p.vy *= damping;
     p.x += p.vx * dt;
     p.y += p.vy * dt;
-
-    // wrap edges
     if (p.x < 0) p.x += W;
     if (p.x > W) p.x -= W;
     if (p.y < 0) p.y += H;
     if (p.y > H) p.y -= H;
+  }
 
-    // draw
-    const sp = Math.hypot(p.vx, p.vy);
-    ctx.fillStyle = `hsl(${180 + sp * 4},80%,60%)`;
+  // draw connections
+  ctx.lineWidth = 1;
+  for (let i = 0; i < N; i++) {
+    const a = particles[i];
+    for (let j = i + 1; j < N; j++) {
+      const b = particles[j];
+      const dx = a.x - b.x,
+        dy = a.y - b.y;
+      const d2 = dx * dx + dy * dy;
+      if (d2 < radius * radius) {
+        const d = Math.sqrt(d2);
+        const alpha = 1 - d / radius;
+        ctx.strokeStyle = `rgba(150,180,255,${alpha * 0.3})`;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  // draw particles
+  for (let p of particles) {
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
     ctx.fill();
   }
 
-  // cursor visual
+  // cursor
   ctx.beginPath();
-  ctx.arc(mouse.x, mouse.y, 6, 0, Math.PI * 2);
+  ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2);
   ctx.fillStyle = "#fff";
   ctx.fill();
 
-  hud.innerHTML = `<strong>Lesson 6</strong> — Force Fields<br>
-  Mode: <kbd>Q</kbd> none • <kbd>W</kbd> attract • <kbd>E</kbd> repel<br>
-  Gravity ${gravity.y.toFixed(0)} | Wind ${wind.x.toFixed(0)} | ${
-    particles.length
-  } particles`;
-
+  hud.textContent = `Lesson 7 — Connections • ${N} particles • link radius ${radius}px`;
   requestAnimationFrame(frame);
 }
 resize();
