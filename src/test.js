@@ -25,6 +25,8 @@ const N = 200;
 const particles = [];
 const radius = 100;
 for (let i = 0; i < N; i++) {
+  // const a = particles[i];
+  // for (let j = i + 1; j < N && j < i + 30; j++) {
   particles.push({
     x: Math.random() * window.innerWidth,
     y: Math.random() * window.innerHeight,
@@ -33,6 +35,7 @@ for (let i = 0; i < N; i++) {
     r: 2,
     color: `hsl(${200 + Math.random() * 100},80%,60%)`,
   });
+  // }
 }
 
 // ---- loop ----
@@ -77,7 +80,14 @@ function frame(now) {
       if (d2 < radius * radius) {
         const d = Math.sqrt(d2);
         const alpha = 1 - d / radius;
-        ctx.strokeStyle = `rgba(150,180,255,${alpha * 0.3})`;
+        // ctx.strokeStyle = `rgba(150,180,255,${alpha * 0.3})`;
+
+        const speed = (Math.hypot(a.vx, a.vy) + Math.hypot(b.vx, b.vy)) * 0.5; // Color lines by particle speed
+        ctx.strokeStyle = `hsl(${180 + speed * 2},90%,70%,${alpha * 0.4})`;
+
+        // let hue = (now * 0.02) % 360;
+        // ctx.strokeStyle = `hsla(${hue},100%,70%,${alpha * 0.4})`; // Add “energy pulse”
+
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         ctx.lineTo(b.x, b.y);
