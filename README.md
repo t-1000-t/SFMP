@@ -1,2 +1,3 @@
-Lesson 7
-<img width="922" height="889" alt="image" src="https://github.com/user-attachments/assets/a77f1174-425e-453c-ae37-142b4ab598be" />
+Lesson 8
+
+<img width="862" height="890" alt="image" src="https://github.com/user-attachments/assets/14e0378e-54ee-4dff-9f05-449b66880328" />
