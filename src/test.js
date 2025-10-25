@@ -142,6 +142,9 @@ function frame(now) {
     insertParticle(p);
   }
 
+  // ---- measure connection loop time ----
+  const t0 = performance.now();
+
   // draw connections using grid neighbors only
   ctx.lineWidth = 1;
   for (let cy = 0; cy < rows; cy++) {
@@ -201,6 +204,9 @@ function frame(now) {
     }
   }
 
+  const t1 = performance.now();
+  const computeMs = (t1 - t0).toFixed(2);
+
   // optional grid overlay (draw once, not per-cell)
   ctx.strokeStyle = "rgba(100,100,150,0.2)";
   for (let x = 0; x < W; x += cellSize) {
@@ -230,7 +236,9 @@ function frame(now) {
   ctx.fillStyle = "#fff";
   ctx.fill();
 
-  hud.textContent = `Lesson 8 — Spatial Partitioning • ${N} particles • grid ${cols}x${rows} • cell ${cellSize}px • physics ${physicsMode} - type O or D batton`;
+  hud.textContent =
+    `Lesson 8 — Spatial Partitioning • ${N} particles • grid ${cols}x${rows} • ` +
+    `cell ${cellSize}px • physics ${physicsMode} | compute ${computeMs} ms - type O or D batton`;
 
   requestAnimationFrame(frame);
 }
