@@ -13,7 +13,22 @@ const resize = () => {
 
 new ResizeObserver(resize).observe(canvas);
 
-// ---- state ----
+// ---- particles ----
+const N = 800;
+const radius = 80;
+const damping = 0.985;
+const particles = [];
+for (let i = 0; i < N; i++) {
+  particles.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    vx: (Math.random() - 0.5) * 60,
+    vy: (Math.random() - 0.5) * 60,
+    r: 2,
+  });
+}
+
+// ---- mouse interaction ----
 const mouse = { x: 0, y: 0 };
 window.addEventListener("mousemove", (e) => {
   const r = canvas.getBoundingClientRect();
@@ -21,97 +36,98 @@ window.addEventListener("mousemove", (e) => {
   mouse.y = e.clientY - r.top;
 });
 
-const N = 200;
-const particles = [];
-const radius = 100;
-for (let i = 0; i < N; i++) {
-  // const a = particles[i];
-  // for (let j = i + 1; j < N && j < i + 30; j++) {
-  particles.push({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    vx: (Math.random() - 0.5) * 80,
-    vy: (Math.random() - 0.5) * 80,
-    r: 2,
-    color: `hsl(${200 + Math.random() * 100},80%,60%)`,
-  });
-  // }
+// ---- spatial grid ----
+const cellSize = radius;
+let cols, rows, grid;
+function makeGrid() {
+  cols = Math.ceil(canvas.clientWidth / cellSize);
+  rows = Math.ceil(canvas.clientHeight / cellSize);
+  grid = Array.from({ length: cols * rows }, () => []);
+}
+function insertParticle(p) {
+  const cx = Math.floor(p.x / cellSize);
+  const cy = Math.floor(p.y / cellSize);
+  const idx = cy * cols + cx;
+  if (grid[idx]) grid[idx].push(p);
 }
 
-// ---- loop ----
+// ---- main loop ----
 let last = performance.now();
 function frame(now) {
   const dt = Math.min(0.033, (now - last) / 1000);
   last = now;
-  ctx.fillStyle = "rgba(0,0,0,0.25)";
+  ctx.fillStyle = "rgba(0,0,0,0.2)";
   ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
   const W = canvas.clientWidth,
     H = canvas.clientHeight;
 
-  // update positions
+  // rebuild grid
+  makeGrid();
   for (let p of particles) {
-    const dx = mouse.x - p.x;
-    const dy = mouse.y - p.y;
-    const d2 = dx * dx + dy * dy;
-    if (d2 < 20000) {
-      // gentle repel from mouse
-      const inv = 1 / Math.sqrt(d2 || 1);
-      p.vx -= dx * inv * 200 * dt;
-      p.vy -= dy * inv * 200 * dt;
-    }
+    p.vx *= damping;
+    p.vy *= damping;
     p.x += p.vx * dt;
     p.y += p.vy * dt;
     if (p.x < 0) p.x += W;
     if (p.x > W) p.x -= W;
     if (p.y < 0) p.y += H;
     if (p.y > H) p.y -= H;
+    insertParticle(p);
   }
 
-  // draw connections
+  // draw connections using grid neighbors only
   ctx.lineWidth = 1;
-  for (let i = 0; i < N; i++) {
-    const a = particles[i];
-    for (let j = i + 1; j < N; j++) {
-      const b = particles[j];
-      const dx = a.x - b.x,
-        dy = a.y - b.y;
-      const d2 = dx * dx + dy * dy;
-      if (d2 < radius * radius) {
-        const d = Math.sqrt(d2);
-        const alpha = 1 - d / radius;
-        // ctx.strokeStyle = `rgba(150,180,255,${alpha * 0.3})`;
+  for (let cy = 0; cy < rows; cy++) {
+    for (let cx = 0; cx < cols; cx++) {
+      const cell = grid[cy * cols + cx];
+      if (!cell.length) continue;
 
-        const speed = (Math.hypot(a.vx, a.vy) + Math.hypot(b.vx, b.vy)) * 0.5; // Color lines by particle speed
-        ctx.strokeStyle = `hsl(${180 + speed * 2},90%,70%,${alpha * 0.4})`;
+      // neighbor offsets (-1 to +1)
+      for (let ny = -1; ny <= 1; ny++) {
+        for (let nx = -1; nx <= 1; nx++) {
+          const ncell = grid[(cy + ny) * cols + (cx + nx)];
+          if (!ncell) continue;
 
-        // let hue = (now * 0.02) % 360;
-        // ctx.strokeStyle = `hsla(${hue},100%,70%,${alpha * 0.4})`; // Add “energy pulse”
-
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
+          // check distances only between these 2 groups
+          for (let a of cell) {
+            for (let b of ncell) {
+              if (a === b) continue;
+              const dx = a.x - b.x,
+                dy = a.y - b.y;
+              const d2 = dx * dx + dy * dy;
+              if (d2 < radius * radius) {
+                const d = Math.sqrt(d2);
+                const alpha = 1 - d / radius;
+                ctx.strokeStyle = `rgba(180,200,255,${alpha * 0.3})`;
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.stroke();
+              }
+            }
+          }
+        }
       }
     }
   }
 
   // draw particles
+  ctx.fillStyle = "#9fd";
   for (let p of particles) {
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = p.color;
     ctx.fill();
   }
 
-  // cursor
   ctx.beginPath();
   ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2);
   ctx.fillStyle = "#fff";
   ctx.fill();
 
-  hud.textContent = `Lesson 7 — Connections • ${N} particles • link radius ${radius}px`;
+  hud.textContent = `Lesson 8 — Spatial Partitioning • ${N} particles • grid ${cols}x${rows}`;
   requestAnimationFrame(frame);
 }
+
 resize();
 requestAnimationFrame(frame);
