@@ -110,6 +110,19 @@ function frame(now) {
         }
       }
     }
+    ctx.strokeStyle = "rgba(100,100,150,0.2)";
+    for (let x = 0; x < W; x += cellSize) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, H);
+      ctx.stroke();
+    }
+    for (let y = 0; y < H; y += cellSize) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
   }
 
   // draw particles
