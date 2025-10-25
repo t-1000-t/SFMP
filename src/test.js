@@ -18,6 +18,15 @@ const N = 800;
 const radius = 80;
 const damping = 0.985;
 const particles = [];
+// ---- physics modes ----
+// Press D to toggle Drift, G for Gravity, O to switch Off.
+let physicsMode = "Drift"; // "Drift" | "Gravity" | "Off"
+const DRIFT_FORCE = 22; // px/s^2 magnitude of the flow field
+const DRIFT_SCALE = 180; // spatial scale of flow ripples
+const GRAVITY_K = 0.25; // spring-like pull towards screen center
+const MAX_V = 140; // clamp speeds for stability
+let t = 0; // time accumulator for drift animation
+
 for (let i = 0; i < N; i++) {
   particles.push({
     x: Math.random() * window.innerWidth,
@@ -57,6 +66,9 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "ArrowUp" || e.key === "ArrowDown") e.preventDefault();
   if (e.key === "ArrowUp") cellSize = Math.min(300, cellSize + 10);
   if (e.key === "ArrowDown") cellSize = Math.max(30, cellSize - 10);
+  if (e.key === "d" || e.key === "D") physicsMode = "Drift";
+  // if (e.key === "g" || e.key === "G") physicsMode = "Gravity";
+  if (e.key === "o" || e.key === "O") physicsMode = "Off";
 });
 
 // Choose only half the neighbors to avoid double work
@@ -84,11 +96,44 @@ function frame(now) {
   // rebuild grid
   makeGrid();
   for (let p of particles) {
-    p.vx *= damping;
-    p.vy *= damping;
+    // ---- PHYSICS INTEGRATION ----
+    // compute forces
+    let ax = 0,
+      ay = 0;
+
+    if (physicsMode === "Drift") {
+      // jelly-like wavy flow field
+      const u = (p.y + t * 120) / DRIFT_SCALE;
+      const v = (p.x - t * 90) / DRIFT_SCALE;
+      ax += Math.sin(u) * DRIFT_FORCE;
+      ay += Math.cos(v) * DRIFT_FORCE;
+    } else if (physicsMode === "Gravity") {
+      // soft spring toward center
+      // const dx = cx - p.x;
+      // const dy = cy - p.y;
+      // ax += (dx * GRAVITY_K) / 100;
+      // ay += (dy * GRAVITY_K) / 100;
+      return;
+    }
+
+    // apply acceleration, damping, and integrate motion
+    p.vx = (p.vx + ax * dt) * damping;
+    p.vy = (p.vy + ay * dt) * damping;
+
+    // limit max velocity for stability
+    const speed2 = p.vx * p.vx + p.vy * p.vy;
+    if (speed2 > MAX_V * MAX_V) {
+      const s = Math.sqrt(speed2);
+      const k = MAX_V / s;
+      p.vx *= k;
+      p.vy *= k;
+    }
+
+    // update position
     p.x += p.vx * dt;
     p.y += p.vy * dt;
 
+    // screen wrapping
     if (p.x < 0) p.x += W;
     if (p.x > W) p.x -= W;
     if (p.y < 0) p.y += H;
@@ -185,7 +230,8 @@ function frame(now) {
   ctx.fillStyle = "#fff";
   ctx.fill();
 
-  hud.textContent = `Lesson 8 — Spatial Partitioning • ${N} particles • grid ${cols}x${rows} • cell ${cellSize}px`;
+  hud.textContent = `Lesson 8 — Spatial Partitioning • ${N} particles • grid ${cols}x${rows} • cell ${cellSize}px • physics ${physicsMode} - type O or D batton`;
+
   requestAnimationFrame(frame);
 }
 
