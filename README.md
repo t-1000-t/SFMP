@@ -1,3 +1,3 @@
 Lesson 8
 
-<img width="862" height="890" alt="image" src="https://github.com/user-attachments/assets/14e0378e-54ee-4dff-9f05-449b66880328" />
+<img width="859" height="846" alt="image" src="https://github.com/user-attachments/assets/a2f503c4-f7fc-4eb9-b064-f71b87d4c37e" />
