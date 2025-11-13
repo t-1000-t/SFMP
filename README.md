@@ -1,4 +1,4 @@
-<img width="1284" height="981" alt="image" src="https://github.com/user-attachments/assets/62754cbd-97e4-4f53-a2c0-82518444361c" />
+<img width="1671" height="778" alt="image" src="https://github.com/user-attachments/assets/fadf40bf-babf-49cd-8f2a-7b71a8dd543b" />
 
 # Welcome to React Router!
 

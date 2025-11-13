@@ -1,13 +1,13 @@
 import React, { useRef, useEffect } from "react";
 
-type Props = {
+type ParticlesFieldType = {
   count?: number;
   linkRadius?: number;
   color?: string;
   bgColor?: string;
 };
 
-const ParticlesField: React.FC<Props> = ({
+const ParticlesField: React.FC<ParticlesFieldType> = ({
   count = 600,
   linkRadius = 100,
   color = "#9fd",
@@ -62,7 +62,7 @@ const ParticlesField: React.FC<Props> = ({
       if (grid[idx]) grid[idx].push(p);
     };
 
-    const mouse = { x: 0, y: 0 };
+    const mouse: {x: number, y: number} = { x: 0, y: 0 };
     const move = (e: MouseEvent) => {
       const r = canvas.getBoundingClientRect();
       mouse.x = e.clientX - r.left;
