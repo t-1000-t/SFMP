@@ -7,6 +7,10 @@ type ParticlesFieldType = {
   bgColor?: string;
 };
 
+
+
+
+
 const ParticlesField: React.FC<ParticlesFieldType> = ({
   count = 600,
   linkRadius = 100,
@@ -44,10 +48,12 @@ const ParticlesField: React.FC<ParticlesFieldType> = ({
       r: 2,
     }));
 
+    type Particle = (typeof particles)[number];
+
     const cellSize = linkRadius;
     let cols = 0;
     let rows = 0;
-    let grid: (typeof particles)[][] = [];
+    let grid: Particle[][] = [];
 
     const makeGrid = () => {
       cols = Math.ceil(canvas.clientWidth / cellSize);
