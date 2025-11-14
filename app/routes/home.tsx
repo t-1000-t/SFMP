@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
-import CanvasDefault from "../src/components/CanvasDefault";
+// import { Welcome } from "../welcome/welcome";
+// import CanvasDefault from "../src/components/CanvasDefault";
 import ParticlePlayground from "~/src/components/ParticlePlayground";
 
 export function meta({}: Route.MetaArgs) {
